@@ -26,18 +26,18 @@ namespace CodePulse.API.Controllers
             //map DTO to Domain model
             var category = new Category
             {
-                Name=request.Name,
-                UrlHandle=request.UrlHandle
+                Name = request.Name,
+                UrlHandle = request.UrlHandle
             };
 
             await categoryRepository.CreateAsync(category);
 
             //map Domain model to DTO
             var response = new CategoryDto
-            {   
-                Id= category.Id,
-                Name=category.Name,
-                UrlHandle=category.UrlHandle,
+            {
+                Id = category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle,
             };
 
             return Ok(response);
@@ -48,17 +48,17 @@ namespace CodePulse.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
-           var categories= await categoryRepository.GetAllAsync();
+            var categories = await categoryRepository.GetAllAsync();
 
             //map domain model to DTO
-            var response= new List<CategoryDto>();
+            var response = new List<CategoryDto>();
             foreach (var category in categories)
             {
                 response.Add(new CategoryDto
                 {
-                    Id=category.Id,
-                    Name=category.Name,
-                    UrlHandle=category.UrlHandle
+                    Id = category.Id,
+                    Name = category.Name,
+                    UrlHandle = category.UrlHandle
                 });
             }
             return Ok(response);
@@ -71,9 +71,9 @@ namespace CodePulse.API.Controllers
         public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
         {
             // call the GetbyIdAsync method from repository class and store the Id inside a variable 
-           var existingCategory= await categoryRepository.GetByIdAsync(id);
+            var existingCategory = await categoryRepository.GetByIdAsync(id);
 
-            if(existingCategory is null)
+            if (existingCategory is null)
             {
                 return NotFound();
             }
@@ -83,12 +83,45 @@ namespace CodePulse.API.Controllers
             {
                 Id = existingCategory.Id,
                 Name = existingCategory.Name,
-                UrlHandle= existingCategory.UrlHandle
+                UrlHandle = existingCategory.UrlHandle
             };
 
             //return the id so we can see it
             return Ok(response);
 
-        } 
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
+        {
+            //convert DTO to Domain Model
+            var category = new Category
+            {
+                Id = id,
+                Name = request.Name,
+                UrlHandle = request.UrlHandle
+            };
+
+            //call the EditCategoryAsync method from respository class to edit Category
+           category= await categoryRepository.UpdateAsync(category);
+
+            if(category is null)
+            {
+                return NotFound();
+            }
+
+            // now convert from Domain Model to DTO
+            var response = new CategoryDto
+            {
+                Id=category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle
+            };
+
+            // Return the response so we can see the changes
+            return Ok(response);
+
+        }
     }
 }

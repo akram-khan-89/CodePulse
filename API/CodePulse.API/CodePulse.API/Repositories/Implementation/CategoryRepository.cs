@@ -23,13 +23,26 @@ namespace CodePulse.API.Repositories.Implementation
 
         public async Task<IEnumerable<Category>> GetAllAsync()
         {
-          return await dbContext.Categories.ToListAsync();
+            return await dbContext.Categories.ToListAsync();
         }
 
         public async Task<Category?> GetByIdAsync(Guid id)
         {
             //find id which is comes from the argument passed at runtime
-            return await dbContext.Categories.FirstOrDefaultAsync(x=> x.Id ==id);
+            return await dbContext.Categories.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Category?> UpdateAsync(Category category)
+        {
+            var existingCategory = await dbContext.Categories.FirstOrDefaultAsync(x => x.Id == category.Id);
+
+            if (existingCategory != null)
+            {
+                dbContext.Entry(existingCategory).CurrentValues.SetValues(category);
+                await dbContext.SaveChangesAsync();
+                return category;
+            }
+            return null;
         }
     }
 }
