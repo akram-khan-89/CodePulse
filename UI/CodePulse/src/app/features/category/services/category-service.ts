@@ -10,11 +10,6 @@ import { environment } from '../../../../environments/environment';
 export class CategoryService {
   private http = inject(HttpClient);
   private apiBaseUrl = environment.apiBaseUrl;
-  // private apiBaseUrl = 'https://localhost:7281';
-
-  constructor(){
-    console.log('apiBaseUrl:', this.apiBaseUrl);
-  }
 
   addCategoryStatus = signal<'idle' | 'Loading' | 'Success' | 'Error'>('idle');
 
