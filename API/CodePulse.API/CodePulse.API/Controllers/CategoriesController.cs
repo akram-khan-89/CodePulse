@@ -91,6 +91,7 @@ namespace CodePulse.API.Controllers
 
         }
 
+        // PUT: https://localhost:7281/api/Categories/{id}
         [HttpPut]
         [Route("{id:Guid}")]
         public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
