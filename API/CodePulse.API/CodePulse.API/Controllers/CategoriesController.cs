@@ -105,9 +105,9 @@ namespace CodePulse.API.Controllers
             };
 
             //call the EditCategoryAsync method from respository class to edit Category
-           category= await categoryRepository.UpdateAsync(category);
+            category = await categoryRepository.UpdateAsync(category);
 
-            if(category is null)
+            if (category is null)
             {
                 return NotFound();
             }
@@ -115,7 +115,7 @@ namespace CodePulse.API.Controllers
             // now convert from Domain Model to DTO
             var response = new CategoryDto
             {
-                Id=category.Id,
+                Id = category.Id,
                 Name = category.Name,
                 UrlHandle = category.UrlHandle
             };
@@ -124,5 +124,30 @@ namespace CodePulse.API.Controllers
             return Ok(response);
 
         }
+
+        // DELETE: https://localhost:7281/api/Categories/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
+        {
+            var category = await categoryRepository.DeleteAsync(id);
+
+            if (category is null)
+            {
+                return NotFound();
+            }
+
+            //map Domain model to DTO
+            var response = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                UrlHandle = category.UrlHandle
+            };
+
+            return Ok(response);
+
+        }
+
     }
 }
