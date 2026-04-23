@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="mt-3">Add Blog Post</h1>
 
-    <form [formGroup]="addBlogPostForm" class="mt-3">
+    <form [formGroup]="addBlogPostForm" class="mt-3" (ngSubmit)="onSubmit()">
         <div class="mb-3">
             <label class="form-label">Title</label>
             <input type="text" class="form-control" formControlName="title">
