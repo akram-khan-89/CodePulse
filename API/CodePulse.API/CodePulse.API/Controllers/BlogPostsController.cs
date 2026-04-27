@@ -18,7 +18,7 @@ namespace CodePulse.API.Controllers
 
         }
 
-        // POST: {apiBaseUrl}/api/BlogPosts
+        // POST: {apiBaseUrl}/api/blogposts
         [HttpPost]
         public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto request)
         {
