@@ -56,5 +56,32 @@ namespace CodePulse.API.Controllers
             return Ok(response);
         }
 
+        //GET: {apiBaseUrl}/api/blogpposts
+        [HttpGet]
+        public async Task<IActionResult> GetBlogPosts()
+        {
+            // call repository to get data from database
+            var blogposts = await blogPostRepository.GetAllAsync();
+
+            // map Domain Model to DTO
+            var response = new List<BlogPostDto>();
+            foreach (var blogPost in blogposts)
+            {
+                response.Add(new BlogPostDto
+                {
+                    Id = blogPost.Id,
+                    Title = blogPost.Title,
+                    ShortDescription = blogPost.ShortDescription,
+                    Content = blogPost.Content,
+                    FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                    UrlHandle = blogPost.UrlHandle,
+                    PublishedDate = blogPost.PublishedDate,
+                    Author = blogPost.Author,
+                    isVisible = blogPost.isVisible
+                });
+            }
+
+            return Ok(response);
+        }
     }
 }
