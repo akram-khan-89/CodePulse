@@ -10,6 +10,7 @@ export interface AddBlogPostRequest {
 }
 
 export interface BlogPost {
+    id: number;
     title: string;
     shortDescription: string;
     content: string;
