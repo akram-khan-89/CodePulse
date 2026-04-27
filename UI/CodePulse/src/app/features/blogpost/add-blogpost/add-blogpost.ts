@@ -42,8 +42,8 @@ export class AddBlogpost {
     }),
   });
 
-  onSubmit(){
-    const formRawValue=this.addBlogPostForm.getRawValue();
+  onSubmit() {
+    const formRawValue = this.addBlogPostForm.getRawValue();
     console.log(formRawValue);
   }
 
