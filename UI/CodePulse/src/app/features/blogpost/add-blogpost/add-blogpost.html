@@ -31,6 +31,12 @@
 
         <div class="mb-3">
             <label class="form-label">Featured Image URL</label>
+            @if (addBlogPostForm.controls.featuredImageUrl.getRawValue()) {
+            <div>
+                <img style="width: 100px;" class="my-2"
+                    [src]="addBlogPostForm.controls.featuredImageUrl.getRawValue()" />
+            </div>
+            }
             <input type="text" class="form-control" formControlName="featuredImageUrl">
         </div>
 
