@@ -11,11 +11,12 @@ namespace CodePulse.API.Controllers
     public class BlogPostsController : ControllerBase
     {
         private readonly IBlogPostRepository blogPostRepository;
+        private readonly ICategoryRepository categoryRepository;
 
-        public BlogPostsController(IBlogPostRepository blogPostRepository)
+        public BlogPostsController(IBlogPostRepository blogPostRepository, ICategoryRepository categoryRepository)
         {
             this.blogPostRepository = blogPostRepository;
-
+            this.categoryRepository = categoryRepository;
         }
 
         // POST: {apiBaseUrl}/api/blogposts
@@ -32,8 +33,20 @@ namespace CodePulse.API.Controllers
                 UrlHandle = request.UrlHandle,
                 PublishedDate = request.PublishedDate,
                 Author = request.Author,
-                isVisible = request.isVisible
+                isVisible = request.isVisible,
+                Categories = new List<Category>()
             };
+
+            // Loop through category IDs from request, fetch each category from DB,
+            // and add it to the blog post if it exists
+            foreach (var categoryGuid in request.Categories)
+            {
+                var existingCategory = await categoryRepository.GetByIdAsync(categoryGuid);
+                if (existingCategory is not null)
+                {
+                    blogPost.Categories.Add(existingCategory);
+                }
+            }
 
             // call repository to save data to database
             blogPost = await blogPostRepository.CreateAsync(blogPost);
@@ -50,7 +63,14 @@ namespace CodePulse.API.Controllers
                 UrlHandle = blogPost.UrlHandle,
                 PublishedDate = blogPost.PublishedDate,
                 Author = blogPost.Author,
-                isVisible = blogPost.isVisible
+                isVisible = blogPost.isVisible,
+                Categories = blogPost.Categories.Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlHandle = x.UrlHandle,
+
+                }).ToList(),
             };
 
             return Ok(response);
