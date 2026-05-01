@@ -97,7 +97,14 @@ namespace CodePulse.API.Controllers
                     UrlHandle = blogPost.UrlHandle,
                     PublishedDate = blogPost.PublishedDate,
                     Author = blogPost.Author,
-                    isVisible = blogPost.isVisible
+                    isVisible = blogPost.isVisible,
+                    Categories = blogPost.Categories.Select(x => new CategoryDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        UrlHandle = x.UrlHandle,
+
+                    }).ToList(),
                 });
             }
 
