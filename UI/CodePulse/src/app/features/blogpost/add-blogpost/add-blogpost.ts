@@ -51,10 +51,13 @@ export class AddBlogpost {
     isVisible: new FormControl<boolean>(true, {
       nonNullable: true,
     }),
+    categories: new FormControl<string[]>([]),
   });
 
   onSubmit() {
     const formRawValue = this.addBlogPostForm.getRawValue();
+
+    console.log(formRawValue);
 
     const requestDto: AddBlogPostRequest = {
       title: formRawValue.title,
@@ -65,6 +68,7 @@ export class AddBlogpost {
       publishedDate: new Date(formRawValue.publishedDate),
       author: formRawValue.author,
       isVisible: formRawValue.isVisible,
+      categories: formRawValue.categories ?? [],
     }
 
     this.blogPostService.createBlogPost(requestDto).subscribe({
@@ -74,7 +78,7 @@ export class AddBlogpost {
         //navigate to the blog post list page after successful creation
         this.router.navigate(['/admin/blogposts']);
       },
-      error: (error) => {
+      error: () => {
         console.error('Something went wrong!');
       },
     });
