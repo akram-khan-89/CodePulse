@@ -20,7 +20,7 @@ export interface BlogPost {
     featuredImageUrl: string;
     urlHandle: string;
     author: string;
-    publishedDate: Date;
+    publishedDate: string;
     isVisible: boolean;
     categories: Category[]
 }
