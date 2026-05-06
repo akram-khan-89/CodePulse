@@ -104,4 +104,20 @@ export class EditBlogpost {
         });
     }
   }
+
+  onDelete() {
+    const id = this.id();
+    if (id) {
+      this.blogPostService.deleteBlogPost(id)
+        .subscribe({
+          next: (response) => {
+            console.log(response);
+            this.router.navigate(['/admin/blogposts']);
+          },
+          error: () => {
+            console.error('Something went wrong!');
+          },
+        });
+    }
+  }
 }
