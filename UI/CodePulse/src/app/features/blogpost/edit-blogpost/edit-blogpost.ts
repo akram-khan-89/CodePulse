@@ -2,6 +2,7 @@ import { Component, effect, inject, input } from '@angular/core';
 import { BlogPostService } from '../services/blog-post-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MarkdownComponent } from 'ngx-markdown';
+import { CategoryService } from '../../category/services/category-service';
 
 @Component({
   selector: 'app-edit-blogpost',
@@ -12,8 +13,13 @@ import { MarkdownComponent } from 'ngx-markdown';
 export class EditBlogpost {
   id = input<string>();
   blogPostService = inject(BlogPostService);
+  categoryService = inject(CategoryService);
+
   private blogPostRef = this.blogPostService.getBlogPostById(this.id);
   blogPostResponse = this.blogPostRef.value;
+
+  private categoriesRef = this.categoryService.getAllCategories();
+  categoriesResponse = this.categoriesRef.value;
 
   editBlogPostForm = new FormGroup({
     title: new FormControl<string>('', {
@@ -51,17 +57,19 @@ export class EditBlogpost {
   });
 
   effectRef = effect(() => {
-    this.editBlogPostForm.patchValue({
-      title: this.blogPostResponse()?.title,
-      shortDescription: this.blogPostResponse()?.shortDescription,
-      content: this.blogPostResponse()?.content,
-      urlHandle: this.blogPostResponse()?.urlHandle,
-      featuredImageUrl: this.blogPostResponse()?.featuredImageUrl,
-      publishedDate: new Date(this.blogPostResponse()?.publishedDate!).toISOString().split('T')[0],
-      author: this.blogPostResponse()?.author,
-      isVisible: this.blogPostResponse()?.isVisible,
-      // categories: this.blogPostResponse()?.categories,
-    });
+    if (this.blogPostResponse()) {
+      this.editBlogPostForm.patchValue({
+        title: this.blogPostResponse()?.title,
+        shortDescription: this.blogPostResponse()?.shortDescription,
+        content: this.blogPostResponse()?.content,
+        urlHandle: this.blogPostResponse()?.urlHandle,
+        featuredImageUrl: this.blogPostResponse()?.featuredImageUrl,
+        publishedDate: new Date(this.blogPostResponse()?.publishedDate!).toISOString().split('T')[0],
+        author: this.blogPostResponse()?.author,
+        isVisible: this.blogPostResponse()?.isVisible,
+        categories: this.blogPostResponse()?.categories.map(x => x.id.toString()),
+      });
+    }
 
   });
 
