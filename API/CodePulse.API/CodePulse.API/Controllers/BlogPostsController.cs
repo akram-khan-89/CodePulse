@@ -150,7 +150,7 @@ namespace CodePulse.API.Controllers
         //PUT: {apiBaseUrl}/api/blogposts/{id}
         [HttpPut]
         [Route("{id:guid}")]
-        public async Task<IActionResult> UpdateBlogPostById([FromRoute] Guid id,[FromBody] UpdateBlogPostRequestDto request)
+        public async Task<IActionResult> UpdateBlogPostById([FromRoute] Guid id, [FromBody] UpdateBlogPostRequestDto request)
         {
             // convert DTO to Domain model
             var blogPost = new BlogPost
@@ -180,13 +180,13 @@ namespace CodePulse.API.Controllers
             // Call Repository To Update BlogPost Domain Model
             var updatedBlogPost = await blogPostRepository.UpdateAsync(blogPost);
 
-            if(updatedBlogPost is null)
+            if (updatedBlogPost is null)
             {
                 return NotFound();
             }
 
             // Convert Domain Model back to DTO
-            var response= new BlogPostDto
+            var response = new BlogPostDto
             {
                 Id = blogPost.Id,
                 Title = blogPost.Title,
@@ -203,6 +203,34 @@ namespace CodePulse.API.Controllers
                     Name = x.Name,
                     UrlHandle = x.UrlHandle,
                 }).ToList(),
+            };
+
+            return Ok(response);
+        }
+
+        //DELETE: {apiBaseUrl}/api/blogposts/{id}
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
+        {
+            var deletedBlogPost = await blogPostRepository.DeleteAsync(id);
+            if (deletedBlogPost is null)
+            {
+                return NotFound();
+            }
+
+            // Map Domain Model to DTO
+            var response = new BlogPostDto
+            {
+                Id = deletedBlogPost.Id,
+                Title = deletedBlogPost.Title,
+                ShortDescription = deletedBlogPost.ShortDescription,
+                Content = deletedBlogPost.Content,
+                FeaturedImageUrl = deletedBlogPost.FeaturedImageUrl,
+                UrlHandle = deletedBlogPost.UrlHandle,
+                PublishedDate = deletedBlogPost.PublishedDate,
+                Author = deletedBlogPost.Author,
+                isVisible = deletedBlogPost.isVisible,
             };
 
             return Ok(response);
