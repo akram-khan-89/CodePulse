@@ -22,11 +22,11 @@ export class AddBlogpost {
   addBlogPostForm = new FormGroup({
     title: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(100)],
+      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(300)],
     }),
     shortDescription: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(300)],
+      validators: [Validators.required, Validators.minLength(10), Validators.maxLength(600)],
     }),
     content: new FormControl<string>('', {
       nonNullable: true,

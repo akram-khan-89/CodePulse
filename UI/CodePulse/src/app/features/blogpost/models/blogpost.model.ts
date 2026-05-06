@@ -12,6 +12,18 @@ export interface AddBlogPostRequest {
     categories: string[];
 }
 
+export interface UpdateBlogPostRequest {
+    title: string;
+    shortDescription: string;
+    content: string;
+    featuredImageUrl: string;
+    urlHandle: string;
+    author: string;
+    publishedDate: Date;
+    isVisible: boolean;
+    categories: string[];
+}
+
 export interface BlogPost {
     id: number;
     title: string;
