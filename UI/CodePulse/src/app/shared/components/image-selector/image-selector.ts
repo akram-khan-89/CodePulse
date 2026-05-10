@@ -9,8 +9,10 @@ import { ImageSelectorService } from '../../services/image-selector-service';
 })
 export class ImageSelector {
   private imageSelectorService = inject(ImageSelectorService);
-  showImageSelector = this.imageSelectorService.showImageSelector.asReadonly;
+  showImageSelector = this.imageSelectorService.showImageSelector.asReadonly();
 
-
+  hideImageSelector() {
+    this.imageSelectorService.hideImageSelector();
+  }
 }
 

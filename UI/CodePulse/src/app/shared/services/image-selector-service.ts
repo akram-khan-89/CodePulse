@@ -5,4 +5,12 @@ import { Injectable, signal } from '@angular/core';
 })
 export class ImageSelectorService {
   showImageSelector = signal<boolean>(false);
+
+  displayImageSelector() {
+    this.showImageSelector.set(true);
+  }
+
+  hideImageSelector() {
+    this.showImageSelector.set(false);
+}
 }
