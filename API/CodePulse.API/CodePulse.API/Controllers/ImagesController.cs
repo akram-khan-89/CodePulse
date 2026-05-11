@@ -1,4 +1,6 @@
 ﻿using CodePulse.API.Models.Domain;
+using CodePulse.API.Models.DTO;
+using CodePulse.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,25 +10,48 @@ namespace CodePulse.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+        private readonly IImageRepository imageRepository;
+        public ImagesController(IImageRepository imageRepository)
+        {
+            this.imageRepository = imageRepository;
+        }
 
         //POST: {apiBaseUrl}/api/images
         [HttpPost]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file,
-            [FromForm] string fileName, [FromForm] string title)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadImage([FromForm] UploadImageRequestDto request)
         {
-            ValidateFile(file);
+            ValidateFile(request.File);
 
             if (ModelState.IsValid)
             {
                 //File upload
                 var blogImage = new BlogImage
                 {
-                    FileExtension = Path.GetExtension(file.FileName).ToLower(),
-                    FileName=fileName,
-                    Title=title,
-                    DateCreated=DateTime.Now,
+                    FileExtension = Path.GetExtension(request.File.FileName).ToLower(),
+                    FileName = request.FileName,
+                    Title = request.Title,
+                    DateCreated = DateTime.Now,
                 };
+
+                blogImage = await imageRepository.Upload(request.File, blogImage);
+
+                // Convert Domain Model to DTO
+                var response = new BlogImageDto
+                {
+                    Id = blogImage.Id,
+                    Title = blogImage.Title,
+                    DateCreated = blogImage.DateCreated,
+                    FileExtension = blogImage.FileExtension,
+                    FileName = blogImage.FileName,
+                    Url = blogImage.Url,
+                };
+
+                return Ok(response);
+
             }
+
+            return BadRequest(ModelState);
         }
 
         private void ValidateFile(IFormFile file)
