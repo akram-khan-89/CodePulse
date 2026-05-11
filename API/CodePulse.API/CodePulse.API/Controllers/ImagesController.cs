@@ -25,7 +25,7 @@ namespace CodePulse.API.Controllers
 
             if (ModelState.IsValid)
             {
-                //File upload
+                //File up load
                 var blogImage = new BlogImage
                 {
                     FileExtension = Path.GetExtension(request.File.FileName).ToLower(),
